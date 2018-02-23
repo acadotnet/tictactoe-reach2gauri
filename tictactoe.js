@@ -4,6 +4,7 @@ class TicTac{
         this._yPos = yPos;
         this._value;
         this._isChecked = false;
+        
     }
 
     get xPos(){
