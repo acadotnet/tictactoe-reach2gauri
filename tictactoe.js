@@ -16,8 +16,14 @@ class TicTac{
     get isChecked(){
         return this._isChecked;
     }
+    set isChecked(isCheckedValue) {
+        this._isChecked = isCheckedValue;
+    }
     get value(){
         return this._value;
+    }
+    set value(screenValue) {
+        this._value = screenValue;
     }
     setTicTac(play){
         if(!this._isChecked){
@@ -37,7 +43,7 @@ class TicTac{
 class TicTacToeBoard{
     constructor(ticTacs){
         this._ticTacs = ticTacs;
-        this._nextPlay = 'X';
+        this._nextPlay = 'O';
 
         console.log('Good luck!')
     }
@@ -46,18 +52,29 @@ class TicTacToeBoard{
         return this._ticTacs;
     }
 
+    get nextPlay() {
+        return this._nextPlay;
+    }
     makeMove(x, y){
         for(var i = 0; i < this._ticTacs.length; i++){
             if(this._ticTacs[i].xPos == x && this._ticTacs[i].yPos == y){
                 
-                this._ticTacs[i].setTicTac(this._nextPlay);
-
                 if (this._nextPlay == 'X'){
                     this._nextPlay = 'O';
                 } else {
                     this._nextPlay = 'X'
                 }
+
+                this._ticTacs[i].setTicTac(this._nextPlay);
             }
+        }
+    }
+
+    reset() {
+        for (var i = 0; i < this._ticTacs.length; i++) {
+            this._ticTacs[i].isChecked = false;
+            this._ticTacs[i].value = ' ';
+            this._nextPlay = 'O';
         }
     }
 
@@ -78,6 +95,7 @@ class TicTacToeBoard{
                             console.log('Winning squares 1: ' +  this._ticTacs[i].toString());
                             console.log('Winning squares 2: ' +  diagTicTac1.toString());
                             console.log('Winning squares 3: ' +  diagTicTac2.toString());
+                            break;
                         }
                     }
                 }
@@ -94,6 +112,7 @@ class TicTacToeBoard{
                             console.log('Winning squares 1: ' +  this._ticTacs[i].toString());
                             console.log('Winning squares 2: ' +  diagTicTac11.toString());
                             console.log('Winning squares 3: ' +  diagTicTac22.toString());
+                            break;
                         }
                     }
                 }
@@ -110,6 +129,7 @@ class TicTacToeBoard{
                             console.log('Winning squares 1: ' +  this._ticTacs[i].toString());
                             console.log('Winning squares 2: ' +  rightTicTac1.toString());
                             console.log('Winning squares 3: ' +  rightTicTac2.toString());
+                            break;
                         }
                     }
                 }
@@ -126,6 +146,7 @@ class TicTacToeBoard{
                             console.log('Winning squares 1: ' +  this._ticTacs[i].toString());
                             console.log('Winning squares 2: ' +  downTicTac1.toString());
                             console.log('Winning squares 3: ' +  downTicTac2.toString());
+                            break;
                         }
                     }
                 }
@@ -134,30 +155,79 @@ class TicTacToeBoard{
     }
 }
 
-var squares = [];
-squares.push(new TicTac(0, 0));
-squares.push(new TicTac(0, 1));
-squares.push(new TicTac(0, 2));
-squares.push(new TicTac(1, 0));
-squares.push(new TicTac(1, 1));
-squares.push(new TicTac(1, 2));
-squares.push(new TicTac(2, 0));
-squares.push(new TicTac(2, 1));
-squares.push(new TicTac(2, 2));
 
-var theGame = new TicTacToeBoard(squares);
+$(document).ready(function () {
+    var squares = [];
+    squares.push(new TicTac(0, 0));
+    squares.push(new TicTac(0, 1));
+    squares.push(new TicTac(0, 2));
+    squares.push(new TicTac(1, 0));
+    squares.push(new TicTac(1, 1));
+    squares.push(new TicTac(1, 2));
+    squares.push(new TicTac(2, 0));
+    squares.push(new TicTac(2, 1));
+    squares.push(new TicTac(2, 2));
 
-theGame.makeMove(0, 2);
-theGame.isWinner();
+    var theGame = new TicTacToeBoard(squares);
 
-theGame.makeMove(1, 0);
-theGame.isWinner();
+    //enters the X-O value alternatevely in tic-tac-toe boxes
+    $('.box').click(function (e) {
+        var idvalue = $(this).attr("id");
+        switch (idvalue) {
+            case "box1":
+                theGame.makeMove(0, 0);
+                theGame.isWinner();
 
-theGame.makeMove(1, 1);
-theGame.isWinner();
+                break;
+            case "box2":
+                theGame.makeMove(0, 1);
+                theGame.isWinner();
 
-theGame.makeMove(2, 2);
-theGame.isWinner();
+                break;
+            case "box3":
+                theGame.makeMove(0, 2);
+                theGame.isWinner();
 
-theGame.makeMove(2, 0);
-theGame.isWinner();
+                break;
+            case "box4":
+                theGame.makeMove(1, 0);
+                theGame.isWinner();
+
+                break;
+            case "box5":
+                theGame.makeMove(1, 1);
+                theGame.isWinner();
+
+                break;
+            case "box6":
+                theGame.makeMove(1, 2);
+                theGame.isWinner();
+
+                break;
+            case "box7":
+                theGame.makeMove(2, 0);
+                theGame.isWinner();
+
+                break;
+            case "box8":
+                theGame.makeMove(2, 1);
+                theGame.isWinner();
+
+                break;
+            case "box9":
+                theGame.makeMove(2, 2);
+                theGame.isWinner();
+
+                break;
+        }
+        $(this).append(theGame.nextPlay);
+
+    });
+
+    //reset all the boxes in tic-tac-toe
+    $('#reset').click(function (e) {
+        $('.box').html('<pre>  </pre>');
+        theGame.reset();
+    });
+
+});
